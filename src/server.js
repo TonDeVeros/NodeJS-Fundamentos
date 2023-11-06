@@ -6,6 +6,8 @@
 // ESModules => import/export
 import http from 'node:http';
 import { json } from './middlewares/json.js';
+import { Database } from './database.js';
+import { randomUUID } from 'node:crypto'; 
 
 //req é uma requisicao(quem esta chamando o servidor)
 //res é uma response a resposta do servidor
@@ -17,7 +19,9 @@ import { json } from './middlewares/json.js';
 
 //cabecalhos (requisicao/resposta) => metadados
 
-const users = [];
+// const users = [];//aqui é so para em memoria
+
+const database = new Database();
 
 
 
@@ -31,6 +35,7 @@ const server = http.createServer(async(req, res)=>{
     // console.log(req.body);
 
     if(method === 'GET' && url === '/users'){
+        const users = database.select('users');
         return res.end(JSON.stringify(users));
 
         // .setHeader('Content-type', 'application/json') //agora estou fazendo essa funcao no middleware
@@ -41,11 +46,13 @@ const server = http.createServer(async(req, res)=>{
         const {name, email} = req.body
 
 
-        users.push({
-            id:1,
+        const user = {
+            id:randomUUID(),
             name,
             email
-        })
+        }
+
+        database.insert('users', user)
 
         // return res.end('Criação de usuário');
         return res.writeHead(201).end('Usuário criado com sucesso!');
