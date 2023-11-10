@@ -10,7 +10,13 @@ export const routes = [
         method: 'GET',
         path: BuildRoutePath('/users'),
         handler: (req, res) => {
-            const users = database.select('users');
+
+            const {search} = req.query
+
+            const users = database.select('users',search ? {
+                name: search,
+                email: search
+            } : null);
             return res.end(JSON.stringify(users));
 
              // .setHeader('Content-type', 'application/json') //agora estou fazendo essa funcao no middleware

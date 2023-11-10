@@ -47,10 +47,16 @@ const server = http.createServer(async(req, res)=>{
 
         const routeParams = req.url.match(route.path);
 
-        // console.log(routeParams.groups)
-        console.log(extractQueryParams(routeParams.groups.query))
-        // const params = routeParams.groups
-        req.params = { ...routeParams.groups }
+
+        const { query, ...params } = routeParams.groups
+
+        req.params = params;
+
+        // sem desestruturacao
+        // req.query = extractQueryParams(routeParams.groups.query)
+        //com desestruturacao
+        req.query = query ? extractQueryParams(query) : {}
+
 
         // console.log(req.params)
 
