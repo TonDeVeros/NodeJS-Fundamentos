@@ -41,4 +41,27 @@ export class Database {
 
     return data;
   }
+
+  Update(table,id, data){
+    //procura o id na tabela 
+    const rowIndex = this.database[table].findIndex(row => row.id === id);
+
+    if(rowIndex > -1){
+      //splice remove o id encontrado
+      this.database[table][rowIndex] = { id, ...data };
+      this.#persist();
+    }
+  }
+
+  Delete(table, id){
+
+    //procura o id na tabela 
+    const rowIndex = this.database[table].findIndex(row => row.id === id);
+
+    if(rowIndex > -1){
+      //splice remove o id encontrado
+      this.database[table].splice(rowIndex);
+      this.#persist();
+    }
+  }
 }
